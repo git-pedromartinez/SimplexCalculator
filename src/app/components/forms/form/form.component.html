@@ -1,0 +1,144 @@
+<p>Forma estandar</p>
+<form>
+  <div ngClass="funcionObjetivo funcionObjetivo--unico">
+    <span ngClass="descripcion"> (Max) Z = </span>
+    <div ngClass="funcionObjetivo--unico">
+      <input
+        type="text"
+        [ngModelOptions]="{ standalone: true }"
+        [(ngModel)]="z.constante1"
+        ngClass="funcionObjetivo__constante"
+        autocomplete="off"
+      /><span> x1 </span>
+    </div>
+    <div ngClass="operador">
+      <select
+        ngClass="form-select"
+        aria-label="Default select example"
+        [ngModelOptions]="{ standalone: true }"
+        [(ngModel)]="z.operador"
+      >
+        <option [value]="operador" *ngFor="let operador of operadores">
+          {{ operador }}
+        </option>
+      </select>
+    </div>
+    <div ngClass="funcionObjetivo--unico">
+      <input
+        type="text"
+        [ngModelOptions]="{ standalone: true }"
+        [(ngModel)]="z.constante2"
+        ngClass="funcionObjetivo__constante"
+        autocomplete="off"
+      /><span> x2 </span>
+    </div>
+  </div>
+  <div ngClass="restriccion restriccion--unico">
+    <span ngClass="descripcion"> Restricción (A) = </span>
+    <div ngClass="restriccion--unico">
+      <input
+        type="text"
+        [ngModelOptions]="{ standalone: true }"
+        [(ngModel)]="r1.constante1"
+        ngClass="restriccion__constante"
+        autocomplete="off"
+      /><span> x1 </span>
+    </div>
+    <select
+      ngClass="form-select"
+      aria-label="Default select example"
+      [ngModelOptions]="{ standalone: true }"
+      [(ngModel)]="r1.operador"
+    >
+      <option [value]="operador" *ngFor="let operador of operadores">
+        {{ operador }}
+      </option>
+    </select>
+    <div ngClass="restriccion--unico">
+      <input
+        type="text"
+        [ngModelOptions]="{ standalone: true }"
+        [(ngModel)]="r1.constante2"
+        ngClass="restriccion__constante"
+        autocomplete="off"
+      /><span> x2 </span>
+    </div>
+    <select
+      ngClass="form-select"
+      aria-label="Default select example"
+      [ngModelOptions]="{ standalone: true }"
+      [(ngModel)]="r1.desigualdad"
+    >
+      <option
+        [value]="operador"
+        *ngFor="let operador of operadores_desigualdad"
+      >
+        {{ operador }}
+      </option>
+    </select>
+    <div ngClass="restriccion--unico">
+      <input
+        type="text"
+        [ngModelOptions]="{ standalone: true }"
+        [(ngModel)]="r1.limite"
+        ngClass="restriccion__limite"
+        autocomplete="off"
+      />
+    </div>
+  </div>
+  <div ngClass="restriccion restriccion--unico">
+    <span ngClass="descripcion"> Restricción (B) = </span>
+    <div ngClass="restriccion--unico">
+      <input
+        type="text"
+        [ngModelOptions]="{ standalone: true }"
+        [(ngModel)]="r2.constante1"
+        ngClass="restriccion__constante"
+        autocomplete="off"
+      /><span> x1 </span>
+    </div>
+    <select
+      ngClass="form-select"
+      aria-label="Default select example"
+      [ngModelOptions]="{ standalone: true }"
+      [(ngModel)]="r2.operador"
+    >
+      <option [value]="operador" *ngFor="let operador of operadores">
+        {{ operador }}
+      </option>
+    </select>
+    <div ngClass="restriccion--unico">
+      <input
+        type="text"
+        [ngModelOptions]="{ standalone: true }"
+        [(ngModel)]="r2.constante2"
+        ngClass="restriccion__constante"
+        autocomplete="off"
+      /><span> x2 </span>
+    </div>
+    <select
+      ngClass="form-select"
+      aria-label="Default select example"
+      [ngModelOptions]="{ standalone: true }"
+      [(ngModel)]="r2.desigualdad"
+    >
+      <option
+        [value]="operador"
+        *ngFor="let operador of operadores_desigualdad"
+      >
+        {{ operador }}
+      </option>
+    </select>
+    <div ngClass="restriccion--unico">
+      <input
+        type="text"
+        [ngModelOptions]="{ standalone: true }"
+        [(ngModel)]="r2.limite"
+        ngClass="restriccion__limite"
+        autocomplete="off"
+      />
+    </div>
+  </div>
+  <button (click)="log()" ngClass="btn btn-primary">Calculate</button>
+</form>
+<p>Forma canonica</p>

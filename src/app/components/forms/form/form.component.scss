@@ -1,0 +1,28 @@
+.funcionObjetivo{
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+.funcionObjetivo__constante{
+    width: 4rem;
+}
+.funcionObjetivo--unico{
+    padding: 4px 4px;
+}
+.restriccion{
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+.restriccion__constante{
+    width: 4rem;
+}
+.restriccion__limite{
+    width: 4rem;
+}
+.restriccion--unico{
+    padding: 4px 4px;
+}
+.descripcion{
+    width: 8rem;
+}

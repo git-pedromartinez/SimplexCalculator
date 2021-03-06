@@ -3,6 +3,8 @@ import Fraction from 'fraction.js';
 import * as _ from 'underscore';
 import objetivo from '../models/funcionObjetivo.interface';
 import restriccion from '../models/restriccion.interface';
+import simplexStep from '../models/simplexStep.interface';
+import varBasic from '../models/varBasic.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -48,92 +50,101 @@ export class SimplexService {
     return matrix;
   }
 
-  resolveSimplex(z: objetivo, r1: restriccion, r2: restriccion) {
+  resolveSimplex(
+    z: objetivo,
+    r1: restriccion,
+    r2: restriccion
+  ): Array<simplexStep> {
     let matrix = this.getMatrix(z, r1, r2);
+
     let varIn = ['resultado', 'z', 'x1', 'x2', 's2', 's2'];
     let varOut = ['z', 's1', 's2'];
-    let varBasics: Array<varBasic> = [];
+    let varInOut = ['z', 's1', 's2'];
+
+    let stepsSimplex: Array<simplexStep> = [];
+    stepsSimplex.push({
+      varIn: null,
+      varOut: null,
+      matrix: JSON.parse(JSON.stringify(matrix)),
+      varInOut:JSON.parse(JSON.stringify(varInOut))
+    });
     for (let index = 1; index <= 2; index++) {
-      varBasics.push({
-        namVar: `x${index}`,
-        valueVar: matrix[varOut.indexOf(`z`)][varIn.indexOf(`x${index}`)],
-      });
-    }
-    var stepsSimplex: Array<simplexStep> = [];
-    for (let index = 0; index < varBasics.length; index++) {
-      const element = varBasics[index];
+      let varBasics: Array<varBasic> = [];
+      for (let index = 1; index <= 2; index++) {
+        varBasics.push({
+          namVar: `x${index}`,
+          valueVar: matrix[varOut.indexOf(`z`)][varIn.indexOf(`x${index}`)],
+        });
+      }
       let vars: Array<varBasic> = _.filter(
         varBasics,
         (varBasic) => !new Fraction(0).equals(varBasic.valueVar)
       );
-      let maxVarBasic: varBasic = <varBasic>_.max(vars, (v) => v.valueVar);
+      if (vars.length > 0) {
+        let maxVarBasic: varBasic = <varBasic>_.max(vars, (v) => v.valueVar);
 
-      let tempResults: Array<varBasic> = [];
-      for (let index = 1; index <= 2; index++) {
-        tempResults.push({
-          namVar: `s${index}`,
-          valueVar: matrix[varOut.indexOf(`s${index}`)][
-            varIn.indexOf(`resultado`)
-          ].div(
-            matrix[varOut.indexOf(`s${index}`)][
-              varIn.indexOf(maxVarBasic.namVar)
-            ]
-          ),
-        });
-      }
-      vars = _.filter(
-        tempResults,
-        (varBasic) => !new Fraction(0).equals(varBasic.valueVar)
-      );
-      let minTempBasicResult: varBasic = <varBasic>(
-        _.min(vars, (v) => v.valueVar)
-      );
-      stepsSimplex.push({
-        varIn: maxVarBasic.namVar,
-        varOut: minTempBasicResult.namVar,
-        matrix: JSON.parse(JSON.stringify(matrix)),
-      });
-      let celda: Fraction =
-        matrix[varOut.indexOf(minTempBasicResult.namVar)][
-          varIn.indexOf(maxVarBasic.namVar)
-        ];
-      let fraccion: Fraction = new Fraction(1).div(celda);
-      for (
-        let index = 0;
-        index < matrix[varOut.indexOf(minTempBasicResult.namVar)].length;
-        index++
-      ) {
-        let element = matrix[varOut.indexOf(minTempBasicResult.namVar)][index];
-        matrix[varOut.indexOf(minTempBasicResult.namVar)][index] = element.div(
-          fraccion
+        let tempResults: Array<varBasic> = [];
+        for (let index = 1; index <= 2; index++) {
+          tempResults.push({
+            namVar: `s${index}`,
+            valueVar: matrix[varOut.indexOf(`s${index}`)][
+              varIn.indexOf(`resultado`)
+            ].div(
+              matrix[varOut.indexOf(`s${index}`)][
+                varIn.indexOf(maxVarBasic.namVar)
+              ]
+            ),
+          });
+        }
+        vars = _.filter(
+          tempResults,
+          (varBasic) => !new Fraction(0).equals(varBasic.valueVar)
         );
+        let minTempBasicResult: varBasic = <varBasic>(
+          _.min(vars, (v) => v.valueVar)
+        );
+
+        varInOut[varInOut.indexOf(minTempBasicResult.namVar)]=maxVarBasic.namVar
+
+        let celda: Fraction =
+          matrix[varOut.indexOf(minTempBasicResult.namVar)][
+            varIn.indexOf(maxVarBasic.namVar)
+          ];
+        let fraccion: Fraction = new Fraction(1).div(celda);
+
+        for (
+          let index = 0;
+          index < matrix[varOut.indexOf(minTempBasicResult.namVar)].length;
+          index++
+        ) {
+          let element =
+            matrix[varOut.indexOf(minTempBasicResult.namVar)][index];
+          matrix[varOut.indexOf(minTempBasicResult.namVar)][
+            index
+          ] = element.mul(fraccion);
+        }
+        let vecX: Array<Fraction> = [];
+        for (let index = 0; index < matrix.length; index++) {
+          vecX.push(
+            new Fraction(0).sub(matrix[index][varIn.indexOf(maxVarBasic.namVar)])
+          );
+        }
+        for (let i = 0; i < matrix.length; i++) {
+          for (let j = 0; j < matrix[i].length; j++) {
+            if (!(i === varOut.indexOf(minTempBasicResult.namVar))) {
+              matrix[i][j] = matrix[i][j].add(matrix[varOut.indexOf(minTempBasicResult.namVar)][j].mul(vecX[i]));
+            }
+          }
+        }
+        stepsSimplex.push({
+          varIn: maxVarBasic.namVar,
+          varOut: minTempBasicResult.namVar,
+          matrix: JSON.parse(JSON.stringify(matrix)),
+          varInOut:JSON.parse(JSON.stringify(varInOut))
+        });
+        
       }
-      // let varNoBasics: Array<varBasic>;
-      // for (let index = 1; index <= 2; index++) {
-      //   varNoBasics.push({
-      //     namVar: `s${index}`,
-      //     valueVar: matrix[varIn.indexOf(`s${index}`)][1],
-      //   });
-      // }
-      // let varsHolgura:Array<varBasic>=_.filter(
-      //   varNoBasics,
-      //   (varNoBasic) => !new Fraction(0).equals(varNoBasic.valueVar)
-      // )
-      // for (let index = 0; index < varsHolgura.length; index++) {
-      //   const element = varsHolgura[index];
-      //   element.valueVar=matrix[varIn.indexOf(`s${index+1}`)][0].div(element.valueVar)
-      // }
     }
+    return stepsSimplex;
   }
-}
-
-interface varBasic {
-  namVar: string;
-  valueVar: Fraction;
-}
-
-interface simplexStep {
-  varIn: string | number;
-  varOut: string | number;
-  matrix: Array<Array<Fraction>>;
 }

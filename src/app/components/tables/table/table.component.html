@@ -1,0 +1,25 @@
+<hr>
+<p>Interación: {{ index }}</p>
+<p>{{simplexStep.varIn==null?'':'Varriable de entrada: '+simplexStep.varIn}}</p>
+<p>{{simplexStep.varOut==null?'':'Varriable de entrada: '+simplexStep.varOut}}</p>
+<table class="table table-bordered ">
+  <thead>
+    <tr>
+      <th scope="col">Resultado</th>
+      <th scope="col">Z</th>
+      <th scope="col">x1</th>
+      <th scope="col">x2</th>
+      <th scope="col">s1</th>
+      <th scope="col">s2</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let row of simplexStep.matrix;let i=index">
+      <!-- <th scope="row">{{ i }}</th> -->
+      <td *ngFor="let column of row;let j=index" scope="{{j===0?'':''}}">
+        {{castToString(column)}}
+      </td>
+      <td>{{simplexStep.varInOut[i]}}</td>
+    </tr>
+  </tbody>
+</table>

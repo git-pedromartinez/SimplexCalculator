@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import Fraction from 'fraction.js';
 import objetivo from 'src/app/models/funcionObjetivo.interface';
 import restriccion from 'src/app/models/restriccion.interface';
+import simplexStep from 'src/app/models/simplexStep.interface';
 import { SimplexService } from 'src/app/services/simplex.service';
 
 @Component({
@@ -32,13 +34,15 @@ export class FormComponent implements OnInit {
 
   operadores=['+','-']
   operadores_desigualdad=['>=','<=']
+
+  simplexSteps:Array<simplexStep>=[]
   
   constructor() { }
   
   ngOnInit(): void {
   }
-  log(){
-    new SimplexService().resolveSimplex(this.z,this.r1,this.r2)    
+  startSolution(){
+    this.simplexSteps= new SimplexService().resolveSimplex(this.z,this.r1,this.r2) 
   }
 }
 

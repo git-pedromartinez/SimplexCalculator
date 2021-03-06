@@ -12,7 +12,7 @@
       /><span> x1 </span>
     </div>
     <div ngClass="operador">
-      <select
+      <!-- <select
         ngClass="form-select"
         aria-label="Default select example"
         [ngModelOptions]="{ standalone: true }"
@@ -21,7 +21,8 @@
         <option [value]="operador" *ngFor="let operador of operadores">
           {{ operador }}
         </option>
-      </select>
+      </select> -->
+      <span>+</span>
     </div>
     <div ngClass="funcionObjetivo--unico">
       <input
@@ -44,7 +45,7 @@
         autocomplete="off"
       /><span> x1 </span>
     </div>
-    <select
+    <!-- <select
       ngClass="form-select"
       aria-label="Default select example"
       [ngModelOptions]="{ standalone: true }"
@@ -53,7 +54,8 @@
       <option [value]="operador" *ngFor="let operador of operadores">
         {{ operador }}
       </option>
-    </select>
+    </select> -->
+    <span>+</span>
     <div ngClass="restriccion--unico">
       <input
         type="text"
@@ -97,7 +99,7 @@
         autocomplete="off"
       /><span> x1 </span>
     </div>
-    <select
+    <!-- <select
       ngClass="form-select"
       aria-label="Default select example"
       [ngModelOptions]="{ standalone: true }"
@@ -106,7 +108,8 @@
       <option [value]="operador" *ngFor="let operador of operadores">
         {{ operador }}
       </option>
-    </select>
+    </select> -->
+    <span>+</span>
     <div ngClass="restriccion--unico">
       <input
         type="text"
@@ -139,6 +142,10 @@
       />
     </div>
   </div>
-  <button (click)="log()" ngClass="btn btn-primary">Calculate</button>
+  <button (click)="startSolution()" ngClass="btn btn-primary">Calculate</button>
 </form>
 <p>Forma canonica</p>
+
+<div *ngFor="let step of simplexSteps;let i=index">
+  <app-table [simplexStep]="step" [index]="i"></app-table>
+</div>

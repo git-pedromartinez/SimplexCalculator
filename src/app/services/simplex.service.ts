@@ -81,7 +81,7 @@ export class SimplexService {
         (varBasic) => !new Fraction(0).equals(varBasic.valueVar)
       );
       if (vars.length > 0) {
-        let maxVarBasic: varBasic = <varBasic>_.max(vars, (v) => v.valueVar);
+        let maxVarBasic: varBasic = <varBasic>_.min(vars, (v) => v.valueVar);//el mas negativo
 
         let tempResults: Array<varBasic> = [];
         for (let index = 1; index <= 2; index++) {
@@ -98,7 +98,7 @@ export class SimplexService {
         }
         vars = _.filter(
           tempResults,
-          (varBasic) => !new Fraction(0).equals(varBasic.valueVar)
+          (varBasic) => varBasic.valueVar>=new Fraction(0)
         );
         let minTempBasicResult: varBasic = <varBasic>(
           _.min(vars, (v) => v.valueVar)
